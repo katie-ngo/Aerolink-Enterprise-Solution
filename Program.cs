@@ -15,6 +15,7 @@ builder.Services.AddAuthentication("AeroLinkAuth")
     {
         options.Cookie.Name = "AeroLink.Auth";
         options.LoginPath = "/SignIn";
+        options.ExpireTimeSpan = TimeSpan.FromHours(1);
     });
 
 builder.Services.AddAuthorization(options =>
