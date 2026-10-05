@@ -72,5 +72,13 @@ namespace Aerolink_Enterprise_Solution.Pages
             // If successful, redirect to the Baggage Operations page
             return RedirectToPage("/Index");
         }
+        public async Task<IActionResult> OnPostLogoutAsync()
+        {
+            // Destroys the "AeroLinkAuth" session cookie
+            await HttpContext.SignOutAsync("AeroLinkAuth");
+
+            // Redirect back to the login screen
+            return RedirectToPage("/Index");
+        }
     }
 }
