@@ -13,9 +13,8 @@ builder.Services.AddHttpClient<IHrService, HrService>(client =>
 builder.Services.AddAuthentication("AeroLinkAuth")
     .AddCookie("AeroLinkAuth", options =>
     {
-        options.Cookie.Name = "AeroLink.Session";
-        options.LoginPath = "/Login";
-        options.AccessDeniedPath = "/AccessDenied";
+        options.Cookie.Name = "AeroLink.Auth";
+        options.LoginPath = "/SignIn";
     });
 
 builder.Services.AddAuthorization(options =>
@@ -42,7 +41,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
