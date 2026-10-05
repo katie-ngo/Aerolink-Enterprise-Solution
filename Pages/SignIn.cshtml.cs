@@ -33,6 +33,7 @@ namespace Aerolink_Enterprise_Solution.Pages
         {
             if (!ModelState.IsValid)
             {
+                ErrorMessage = "Please correct the input errors and try again.";
                 return Page();
             }
             if (string.IsNullOrWhiteSpace(EmployeeId) || string.IsNullOrWhiteSpace(Email))
