@@ -15,18 +15,22 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
         <header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3"
+            style="background-color: #e3f2fd;">
                 <div class="container">
-                    <a class="navbar-brand" asp-area="" asp-page="/Index">Aerolink_Enterprise_Solution</a>
+                    <a href="#" class="navbar-brand">
+                        <img src="~/images/plane.png" height="80" alt="AeroLink">
+                    </a>
+                    <strong  class="navbar-brand" asp-area="" asp-page="/Index">AeroLink</strong>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                                <div class="alert alert-warning p-1 m-1">
+@*                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                                <div class="alert alert-warning p-2 m-2">
                     DEBUG: IsAuth = @(User.Identity?.IsAuthenticated.ToString() ?? "null") | 
                     Name = @(User.Identity?.Name ?? "none")
-                </div>
+                </div> *@
                     <ul class="navbar-nav me-auto">
                     @if(User.Identity?.IsAuthenticated == true)
                         {
@@ -61,10 +65,10 @@
 
                        else {
                         <div class="text-end">                            
-                            <button class="btn btn-outline-dark me-2">
+                            <button class="btn btn-outline-primary me-2">
                                 <a class="nav-link text-red" asp-area="" asp-page="/Register">Register</a>
                             </button>  
-                            <button class="btn btn-outline-dark me-2">
+                            <button class="btn btn-outline-primary me-2">
                                 <a class="nav-link text-red" asp-area="" asp-page="/SignIn">Sign In</a>
                             </button>  
                         </div>
