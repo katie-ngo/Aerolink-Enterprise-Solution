@@ -70,7 +70,7 @@ namespace Aerolink_Enterprise_Solution.Pages
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync("AeroLinkAuth", principal);
             // If successful, redirect to the Baggage Operations page
-            return RedirectToPage("/Index");
+            return RedirectToPage("/Home page");
         }
     }
 }
