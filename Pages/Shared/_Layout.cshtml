@@ -1,4 +1,4 @@
-﻿@using System.Security.Claims
+﻿﻿@using System.Security.Claims
 
 
 <!DOCTYPE html>
@@ -26,9 +26,15 @@
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-
-                        <li class="nav-item dropdown">
+@*                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                                <div class="alert alert-warning p-2 m-2">
+                    DEBUG: IsAuth = @(User.Identity?.IsAuthenticated.ToString() ?? "null") | 
+                    Name = @(User.Identity?.Name ?? "none")
+                </div> *@
+                    <ul class="navbar-nav me-auto">
+                    @if(User.Identity?.IsAuthenticated == true)
+                        {
+                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Menu
                             </a>
@@ -37,15 +43,32 @@
                                 <li><a class="dropdown-item" asp-page="/BaggageManagement">Baggage Management</a></li>
                                 <li><a class="dropdown-item" asp-page="/DepartureReadiness">Departure Readiness & Turnaround Completion</a></li>
                             </ul>
-                        </li>
+                        </li>    
+                        }
 
+                       </ul>
 
-                          
+                       @if(User.Identity?.IsAuthenticated == true) {
+                        <div class="d-flex align-items-center gap-4">
+                            <div class="mb-0">
+                                <span  style="font-weight:bold">
+                                    Welcome, @User.Identity.Name!
+                                    
+                                </span>
+
+                                <form method="post" asp-page="/SignIn" asp-page-handler="Logout" class="d-inline m-0">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-door-closed-fill me-1"></i>Log Out</button>
+                                </form>
+                            </div>
+                          </div>
+                       }
+
+                       else {
                         <div class="text-end">                            
-                            <button class="btn btn-outline-primary me-2">
+                            <button class="btn btn-primary me-2">
                                 <a class="nav-link text-red" asp-area="" asp-page="/Register">Register</a>
                             </button>  
-                            <button class="btn btn-outline-primary me-2">
+                            <button class="btn btn-primary me-2">
                                 <a class="nav-link text-red" asp-area="" asp-page="/SignIn">Sign In</a>
                             </button>  
                         </div>
