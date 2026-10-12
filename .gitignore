@@ -480,3 +480,9 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+AeroLink.db
+AeroLink.db-shm
+AeroLink.db-wal
+AeroLink-latest.zip
+HRSystem-2.zip
