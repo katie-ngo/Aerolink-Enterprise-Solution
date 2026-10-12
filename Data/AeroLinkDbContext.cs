@@ -1,0 +1,41 @@
+using Aerolink_Enterprise_Solution.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace Aerolink_Enterprise_Solution.Data;
+
+public class AeroLinkDbContext : DbContext
+{
+    public AeroLinkDbContext(DbContextOptions<AeroLinkDbContext> options)
+        : base(options)
+    {
+    }
+
+    public DbSet<Flight> Flights => Set<Flight>();
+    public DbSet<Bag> Bags => Set<Bag>();
+    public DbSet<BaggageException> BaggageExceptions =>
+        Set<BaggageException>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<BaggageException>()
+            .HasKey(e => e.ExceptionId);
+
+        modelBuilder.Entity<Bag>()
+            .HasOne<Flight>()
+            .WithMany()
+            .HasForeignKey(b => b.FlightId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<BaggageException>()
+            .HasOne<Bag>()
+            .WithMany()
+            .HasForeignKey(e => e.BagId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<BaggageException>()
+            .HasOne<Flight>()
+            .WithMany()
+            .HasForeignKey(e => e.FlightId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
+}
