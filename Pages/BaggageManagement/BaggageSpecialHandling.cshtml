@@ -1,0 +1,65 @@
+﻿
+@page
+@model Aerolink_Enterprise_Solution.Pages.BaggageSpecialHandlingModel
+
+<h1>Special Baggage Handling</h1>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <p>@Model.Message</p>
+}
+
+@if (Model.SpecialBags.Count == 0)
+{
+    <p>No special baggage records found.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Bag Tag</th>
+                <th>Handling Type</th>
+                <th>Handling Instructions</th>
+                <th>Loading Outcome</th>
+                <th>Acknowledgement</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var bag in Model.SpecialBags)
+            {
+                <tr>
+                    <td>@bag.Tag</td>
+                    <td>@bag.HandlingType</td>
+                    <td>@bag.HandlingInstruction</td>
+                    <td>@bag.Outcome</td>
+                    
+                    <td>
+                        @if (bag.SpecialHandlingAcknowledged)
+                        {
+                            <span>Instructions acknowledged</span>
+                        }
+                        else
+                        {
+                            <form method="post" asp-page-handler="Acknowledge">
+                                <input type="hidden" name="BagId" value="@bag.BagId" />
+
+                                <label>
+                                    <input type="checkbox"
+                                        name="ConfirmAcknowledgement"
+                                        value="true"
+                                        required />
+                                    I have read the instructions
+                                </label>
+                                <button type="submit" class="btn btn-primary">
+                                    Acknowledge
+                                </button>
+                            </form>
+                        }
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
