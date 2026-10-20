@@ -11,7 +11,7 @@ builder.Services.AddDbContext<AeroLinkDbContext>(options =>
 builder.Services.AddRazorPages(options =>
 {
     options.Conventions.AuthorizePage("/TurnaroundPlanning");
-    options.Conventions.AuthorizePage("/BaggageManagement", "BaggageOperationsPolicy");
+    options.Conventions.AuthorizePage("/BaggageManagement/BaggageManagement", "BaggageOperationsPolicy");
     options.Conventions.AuthorizePage("/DepartureReadiness");
 });
 

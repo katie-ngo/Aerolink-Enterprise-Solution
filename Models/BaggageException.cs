@@ -9,4 +9,5 @@ public class BaggageException
     public string Description { get; set; } = "";
     public string Status { get; set; } = "Open";
     public string DecisionReason { get; set; } = "";
+    public DateTime ReportedAt {get;set;}
 }

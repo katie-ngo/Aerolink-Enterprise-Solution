@@ -1,0 +1,75 @@
+﻿@page
+@model Aerolink_Enterprise_Solution.Pages.Special_Baggage.ReportBaggageExceptionModel
+<h1>Report Baggage Problem</h1>
+
+<p>
+    Report missing or damaged baggage for investigation by the
+    Baggage Supervisor.
+</p>
+
+<!--Check whether message exists and display success message -->
+@{
+    if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-success" role="alert">
+            @Model.Message
+        </div>
+    }
+}
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div>
+        <label asp-for="FlightId" class="form-label">
+            Departure Flight
+        </label>
+        <select asp-for="FlightId"
+                asp-items="Model.FlightOptions"
+                class="form-select"
+                required>
+            <option value="">Select a flight</option>
+        </select>
+    </div>
+    <div>
+        <label asp-for="BagId" class="form-label">
+            Bag Tag
+        </label>
+        <select asp-for="BagId"
+                asp-items="Model.BagOptions"
+                class="form-select"
+                required>
+            <option value="">Select a bag</option>
+        </select>
+        <small class="form-text text-muted">
+            Bag options show the associated flight. Only select a bag
+            belonging to the departure flight selected above.
+        </small>
+    </div>
+
+    <div>
+        <label asp-for="Category" class="form-label">
+            Problem Category
+        </label>
+        <select asp-for="Category" class="form-select" required>
+            <option value="">Select a problem</option>
+            <option value="MissingBag">Missing baggage</option>
+            <option value="DamagedBag">Damaged baggage</option>
+        </select>
+    </div>
+
+    <div>
+        <label asp-for="Description" class="form-label">
+            Describe the Problem
+        </label>
+        <textarea asp-for="Description"
+                  class="form-control"
+                  rows="4"
+                  maxlength="1000"
+                  required
+                  placeholder="Describe what happened or what damage was found."></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Submit Report
+    </button>
+</form>

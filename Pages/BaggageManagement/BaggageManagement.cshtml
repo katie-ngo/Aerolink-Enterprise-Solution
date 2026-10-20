@@ -3,7 +3,19 @@
 @{
     ViewData["Title"] = "Loading status report";
 }
+<div class="mb-4">
+    <h1>Baggage Operations</h1>
 
+    <a asp-page="/BaggageManagement/BaggageSpecialHandling"
+       class="btn btn-primary me-2">
+        Special Handling
+    </a>
+
+    <a asp-page="/BaggageManagement/ReportBaggageException"
+       class="btn btn-warning">
+        Report Baggage Problem
+    </a>
+</div>
 <h1>Loading status report</h1>
 
 <form method="get" class="mb-4">
