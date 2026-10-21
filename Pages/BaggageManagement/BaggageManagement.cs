@@ -111,9 +111,8 @@ public class BaggageManagementModel : PageModel
             FeedbackType = "danger";
             return RedirectToPage(new { FlightId });
         }
-
         string cleanTag = EnteredBagTag.Trim().ToUpperInvariant();
-
+        string cleanTags = EnteredBagTag.Trim().ToUpperInvariant();
         var bag = await _db.Bags
             .FirstOrDefaultAsync(b => b.Tag.ToUpper() == cleanTag);
 
