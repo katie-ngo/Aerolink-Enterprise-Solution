@@ -100,7 +100,7 @@ public class BaggageManagementModel : PageModel
     {
         if (!FlightId.HasValue)
         {
-            FeedbackMessage = "Please select a flight first.";
+            FeedbackMessage = "Flight Id is required";
             FeedbackType = "danger";
             return RedirectToPage();
         }
@@ -128,14 +128,14 @@ public class BaggageManagementModel : PageModel
         if (bag.FlightId != FlightId.Value)
         {
             var otherFlight = await _db.Flights.FindAsync(bag.FlightId);
-            FeedbackMessage = $"Rejection: Bag '{cleanTag}' belongs to flight {(otherFlight?.FlightNumber ?? bag.FlightId.ToString())}, not this flight!";
+            FeedbackMessage = $"Rejection: Bag '{cleanTag}' belongs to flight {(otherFlight?.FlightNumber ?? bag.FlightId.ToString())}";
             FeedbackType = "danger";
             return RedirectToPage(new { FlightId });
         }
 
         if (bag.Outcome == "Loaded")
         {
-            FeedbackMessage = $"Rejection: Bag '{cleanTag}' has already been confirmed as loaded.";
+            FeedbackMessage = $"Err: Bag '{cleanTags}' has already been loaded.";
             FeedbackType = "warning";
             return RedirectToPage(new { FlightId });
         }
