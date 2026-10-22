@@ -16,6 +16,14 @@
         Report Baggage Problem
     </a>
 </div>
+
+@if (!string.IsNullOrEmpty(Model.FeedbackMessage))
+{
+    <div class="alert alert-@Model.FeedbackType alert-dismissible fade show" role="alert">
+        <strong>Notification:</strong> @Model.FeedbackMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 <h1>Loading status report</h1>
 
 <form method="get" class="mb-4">
@@ -46,8 +54,27 @@ else
     <p>
         @Model.SelectedFlight.DepartureAirport to
         @Model.SelectedFlight.ArrivalAirport |
-        Loading status: @Model.SelectedFlight.LoadingStatus
+        Loading status: <span class="badge bg-secondary">@Model.SelectedFlight.LoadingStatus</span>
     </p>
+
+    <div>
+        <div>
+            <h3 class ="mb-0">Confirm Bags</h3>
+        </div>
+
+        <div "card-body">
+            <form method="post" asp-page-handler="VerifyBag" class="row g-2 align-items-center">
+                <input type="hidden" asp-for="FlightId" />
+                <div>
+                    <input asp-for="EnteredBagTag" class="form-control" placeholder="Add Bag Tag (e.g. DEMO-102-001)" />
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-success">Verify &amp; Confirm Load</button>
+                </div>
+            </form>
+            <small class="text-muted">Must belong to @Model.SelectedFlight.FlightNumber and have no open exceptions.</small>
+        </div>
+    </div>
 
     <table class="table table-bordered">
         <caption class="caption-top">Manifest and loading totals</caption>
@@ -108,29 +135,57 @@ else
         </ul>
     }
 
-    <h3>Outstanding bags</h3>
-    @if (Model.OutstandingCount == 0)
+
+
+
+
+    <h3>Baggage Manifest</h3>
+    @if (Model.ExpectedCount == 0)
     {
-        <p>No outstanding bags remain.</p>
+        <p>No baggage found on manifest</p>
     }
     else
     {
-        <div class="table-responsive">
+        <div class="table-responsive mb-4">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">Bag tag</th>
-                        <th scope="col">Handling type</th>
+                        <th scope="col">Bag Tag ID</th>
+                        <th scope="col">Baggage type</th>
                         <th scope="col">Handling instructions</th>
+                        <th scope="col">Loading Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var bag in Model.OutstandingBags)
+                    @foreach (var bag in Model.Bags)
                     {
                         <tr>
                             <td>@bag.Tag</td>
-                            <td>@bag.HandlingType</td>
+                            <td>
+                                @if (bag.HandlingType != "Standard")
+                                {
+                                    <span class="badge bg-warning text-dark">⚠️ @bag.HandlingType</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-dark text-light">Standard</span>
+                                }
+                            </td>
                             <td>@bag.HandlingInstruction</td>
+                            <td>
+                                @if (bag.Outcome == "Loaded")
+                                {
+                                    <span class="badge bg-success">Loaded</span>
+                                }
+                                else if (bag.Outcome == "ApprovedNotToLoad")
+                                {
+                                    <span class="badge bg-danger">Approved Not To Load</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Pending</span>
+                                }
+                            </td>
                         </tr>
                     }
                 </tbody>
