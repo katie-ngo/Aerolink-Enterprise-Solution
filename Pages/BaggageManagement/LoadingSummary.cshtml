@@ -1,0 +1,95 @@
+@page
+@model Aerolink_Enterprise_Solution.Pages.LoadingSummaryModel
+@{
+    ViewData["Title"] = "Final loading summary";
+    var flight = Model.Summary.Flight;
+}
+
+<h1>Final loading summary</h1>
+
+<div class="alert alert-success">
+    Loading completed.
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Flight</dt>
+    <dd class="col-sm-9">
+        @flight.FlightLabel — @flight.FlightNumber
+    </dd>
+
+    <dt class="col-sm-3">Route</dt>
+    <dd class="col-sm-9">
+        @flight.DepartureAirport to @flight.ArrivalAirport
+    </dd>
+
+    <dt class="col-sm-3">Completed at</dt>
+    <dd class="col-sm-9">
+        @Model.Completion.CompletedAtUtc.ToString("dd MMM yyyy HH:mm:ss") UTC
+    </dd>
+
+    <dt class="col-sm-3">Supervisor</dt>
+    <dd class="col-sm-9">
+        @Model.Completion.CompletedByName
+        (ID: @Model.Completion.CompletedByEmployeeId)
+    </dd>
+
+    <dt class="col-sm-3">Expected bags</dt>
+    <dd class="col-sm-9">@Model.Summary.Bags.Count</dd>
+
+    <dt class="col-sm-3">Loaded bags</dt>
+    <dd class="col-sm-9">@Model.LoadedCount</dd>
+
+    <dt class="col-sm-3">Approved not to load</dt>
+    <dd class="col-sm-9">@Model.ApprovedNotToLoadCount</dd>
+</dl>
+
+<h2>Final bag outcomes</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Bag tag</th>
+            <th scope="col">Outcome</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bag in Model.Summary.Bags)
+        {
+            <tr>
+                <td>@bag.Tag</td>
+                <td>@(bag.Outcome == "ApprovedNotToLoad"
+                    ? "Approved not to load"
+                    : bag.Outcome)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h2>Exception decisions</h2>
+
+@if (Model.Summary.Exceptions.Count == 0)
+{
+    <p>No baggage exceptions were recorded.</p>
+}
+else
+{
+    <ul>
+        @foreach (var exception in Model.Summary.Exceptions)
+        {
+            var bag = Model.Summary.Bags
+                .FirstOrDefault(b => b.BagId == exception.BagId);
+
+            <li>
+                @(bag?.Tag ?? $"Bag ID {exception.BagId}") —
+                @exception.Category — @exception.Status.
+                Reason: @exception.DecisionReason
+            </li>
+        }
+    </ul>
+}
+
+<a asp-page="/BaggageManagement/BaggageManagement"
+   asp-route-FlightId="@Model.Completion.FlightId"
+   class="btn btn-outline-secondary">
+    Back to loading report
+</a>

@@ -46,6 +46,8 @@ using (var scope = app.Services.CreateScope())
 
     db.Database.EnsureCreated();
 
+    CompletionDatabaseSetup.EnsureTable(db);
+
     ManifestImporter.ImportIfEmpty(
         db,
         Path.Combine(

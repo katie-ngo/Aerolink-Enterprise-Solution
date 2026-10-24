@@ -141,6 +141,13 @@ public class BaggageManagementModel : PageModel
         }
 
 
+        if (bag.Outcome == "ApprovedNotToLoad")
+        {
+            FeedbackMessage = $"Rejection: Bag '{cleanTag}' has been approved not to load.";
+            FeedbackType = "danger";
+            return RedirectToPage(new { FlightId });
+        }
+
         var hasOpenException = await _db.BaggageExceptions
             .AnyAsync(e => e.BagId == bag.BagId && e.Status == "Open");
 
