@@ -1,0 +1,95 @@
+@page
+@model Aerolink_Enterprise_Solution.Pages.CompleteLoadingModel
+@{
+    ViewData["Title"] = "Complete loading";
+    var flight = Model.SelectedFlight!;
+}
+
+<h1>Complete loading</h1>
+
+<p>
+    Flight @flight.FlightLabel — @flight.FlightNumber:
+    @flight.DepartureAirport to @flight.ArrivalAirport
+</p>
+
+<p>Loading status: <strong>@flight.LoadingStatus</strong></p>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">Expected</th>
+            <th scope="col">Loaded</th>
+            <th scope="col">Approved not to load</th>
+            <th scope="col">Outstanding</th>
+            <th scope="col">Open exceptions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.ExpectedCount</td>
+            <td>@Model.LoadedCount</td>
+            <td>@Model.ApprovedNotToLoadCount</td>
+            <td>@Model.OutstandingBags.Count</td>
+            <td>@Model.OpenExceptions.Count</td>
+        </tr>
+    </tbody>
+</table>
+
+@if (Model.OutstandingBags.Count > 0)
+{
+    <h2>Outstanding bags</h2>
+    <ul>
+        @foreach (var bag in Model.OutstandingBags)
+        {
+            <li>@bag.Tag — @bag.Outcome</li>
+        }
+    </ul>
+}
+
+@if (Model.OpenExceptions.Count > 0)
+{
+    <h2>Open exceptions</h2>
+    <ul>
+        @foreach (var exception in Model.OpenExceptions)
+        {
+            var bag = Model.Bags.FirstOrDefault(b => b.BagId == exception.BagId);
+            <li>
+                @(bag?.Tag ?? $"Bag ID {exception.BagId}") —
+                @exception.Category: @exception.Description
+            </li>
+        }
+    </ul>
+}
+
+@if (flight.LoadingStatus == "Completed")
+{
+    <p>Loading has already been completed.</p>
+    <a asp-page="/BaggageManagement/LoadingSummary"
+       asp-route-FlightId="@Model.FlightId"
+       class="btn btn-primary">
+        View final summary
+    </a>
+}
+else
+{
+    <p>
+        @(Model.CanComplete
+            ? "All bags are accounted for and no exceptions remain open."
+            : "Completion is blocked until the outstanding items are addressed.")
+    </p>
+
+    <form method="post">
+        <input type="hidden" asp-for="FlightId" />
+        <button type="submit" class="btn btn-success">
+            Complete loading
+        </button>
+    </form>
+}
+
+<a asp-page="/BaggageManagement/BaggageManagement"
+   asp-route-FlightId="@Model.FlightId"
+   class="btn btn-outline-secondary mt-3">
+    Back to loading report
+</a>

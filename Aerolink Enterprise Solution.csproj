@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Aerolink_Enterprise_Solution</RootNamespace>
+    <DefaultItemExcludes>$(DefaultItemExcludes);AeroLink.Tests/**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>

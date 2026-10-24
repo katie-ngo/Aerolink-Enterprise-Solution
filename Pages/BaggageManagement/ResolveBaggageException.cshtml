@@ -1,0 +1,94 @@
+@page
+@model Aerolink_Enterprise_Solution.Pages.ResolveBaggageExceptionModel
+@{
+    ViewData["Title"] = "Decide baggage exception";
+    var exception = Model.ReportedException!;
+    var bag = Model.SelectedBag!;
+    var flight = Model.SelectedFlight!;
+}
+
+<h1>Decide baggage exception</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Flight</dt>
+    <dd class="col-sm-9">
+        @flight.FlightLabel — @flight.FlightNumber
+        (@flight.DepartureAirport to @flight.ArrivalAirport)
+    </dd>
+
+    <dt class="col-sm-3">Bag tag</dt>
+    <dd class="col-sm-9">@bag.Tag</dd>
+
+    <dt class="col-sm-3">Bag outcome</dt>
+    <dd class="col-sm-9">@bag.Outcome</dd>
+
+    <dt class="col-sm-3">Problem category</dt>
+    <dd class="col-sm-9">@exception.Category</dd>
+
+    <dt class="col-sm-3">Problem description</dt>
+    <dd class="col-sm-9">@exception.Description</dd>
+
+    <dt class="col-sm-3">Exception status</dt>
+    <dd class="col-sm-9">@exception.Status</dd>
+</dl>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+@if (exception.Status != "Open")
+{
+    <div class="alert alert-info">
+        This exception has already been decided.
+        Recorded reason: @exception.DecisionReason
+    </div>
+}
+else if (flight.LoadingStatus == "Completed")
+{
+    <div class="alert alert-warning">
+        Loading is completed. Further decisions cannot be recorded.
+    </div>
+}
+else
+{
+    <form method="post">
+        <input type="hidden" asp-for="ExceptionId" />
+
+        <div class="mb-3">
+            <label asp-for="Decision" class="form-label">Decision</label>
+            <select asp-for="Decision" class="form-select" required>
+                <option value="">Select a decision</option>
+                <option value="Resolve">Resolve problem</option>
+                <option value="ApproveNotToLoad">Approve not to load</option>
+            </select>
+            <span asp-validation-for="Decision" class="text-danger"></span>
+        </div>
+
+        <p class="text-muted">
+            Resolving a problem leaves the bag's loading outcome unchanged.
+            Approving not to load records that bag as accounted for
+            without loading it.
+        </p>
+
+        <div class="mb-3">
+            <label asp-for="DecisionReason" class="form-label">
+                Decision reason
+            </label>
+            <textarea asp-for="DecisionReason"
+                      class="form-control"
+                      rows="4"
+                      maxlength="1000"
+                      required></textarea>
+            <span asp-validation-for="DecisionReason"
+                  class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Save decision
+        </button>
+    </form>
+}
+
+<a asp-page="/BaggageManagement/BaggageManagement"
+   asp-route-FlightId="@flight.FlightId"
+   class="btn btn-outline-secondary mt-3">
+    Back to loading report
+</a>

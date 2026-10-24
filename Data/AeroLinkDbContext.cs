@@ -12,8 +12,12 @@ public class AeroLinkDbContext : DbContext
 
     public DbSet<Flight> Flights => Set<Flight>();
     public DbSet<Bag> Bags => Set<Bag>();
+
     public DbSet<BaggageException> BaggageExceptions =>
         Set<BaggageException>();
+
+    public DbSet<LoadingCompletion> LoadingCompletions =>
+        Set<LoadingCompletion>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -36,6 +40,19 @@ public class AeroLinkDbContext : DbContext
             .HasOne<Flight>()
             .WithMany()
             .HasForeignKey(e => e.FlightId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<LoadingCompletion>()
+            .HasKey(c => c.FlightId);
+
+        modelBuilder.Entity<LoadingCompletion>()
+            .Property(c => c.FlightId)
+            .ValueGeneratedNever();
+
+        modelBuilder.Entity<LoadingCompletion>()
+            .HasOne<Flight>()
+            .WithOne()
+            .HasForeignKey<LoadingCompletion>(c => c.FlightId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

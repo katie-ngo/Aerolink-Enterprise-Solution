@@ -51,6 +51,23 @@
 else
 {
     <h2>@Model.SelectedFlight.FlightNumber</h2>
+
+    @if (Model.SelectedFlight.LoadingStatus == "Completed")
+    {
+        <a asp-page="/BaggageManagement/LoadingSummary"
+           asp-route-FlightId="@Model.FlightId"
+           class="btn btn-primary mb-3">
+            View final summary
+        </a>
+    }
+    else if (User.IsInRole("BG_Supervisor"))
+    {
+        <a asp-page="/BaggageManagement/CompleteLoading"
+           asp-route-FlightId="@Model.FlightId"
+           class="btn btn-success mb-3">
+            Complete loading
+        </a>
+    }
     <p>
         @Model.SelectedFlight.DepartureAirport to
         @Model.SelectedFlight.ArrivalAirport |
@@ -215,7 +232,18 @@ else
                     {
                         var bag = Model.Bags.FirstOrDefault(b => b.BagId == exception.BagId);
                         <tr>
-                            <td>@(bag?.Tag ?? $"Bag ID {exception.BagId}")</td>
+                            <td>
+                                @(bag?.Tag ?? $"Bag ID {exception.BagId}")
+
+                                @if (User.IsInRole("BG_Supervisor"))
+                                {
+                                    <a asp-page="/BaggageManagement/ResolveBaggageException"
+                                       asp-route-ExceptionId="@exception.ExceptionId"
+                                       class="btn btn-outline-primary btn-sm ms-2">
+                                        Review
+                                    </a>
+                                }
+                            </td>
                             <td>@exception.Category</td>
                             <td>@exception.Description</td>
                             <td>@exception.DecisionReason</td>
@@ -225,7 +253,6 @@ else
             </table>
         </div>
     }
-
     <p class="text-muted">
         Report updated:
         @DateTime.UtcNow.ToString("HH:mm:ss") UTC.
