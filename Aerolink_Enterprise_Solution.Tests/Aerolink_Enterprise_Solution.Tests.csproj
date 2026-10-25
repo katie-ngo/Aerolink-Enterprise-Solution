@@ -19,8 +19,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Aerolink Enterprise Solution\Aerolink Enterprise Solution.csproj" />
-  </ItemGroup>
+<ItemGroup>
+  <ProjectReference Include="../AeroLink Enterprise Solution.csproj" />
+</ItemGroup>
 
 </Project>
