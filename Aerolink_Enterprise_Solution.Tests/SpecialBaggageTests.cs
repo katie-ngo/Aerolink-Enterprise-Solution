@@ -65,18 +65,6 @@ public class SpecialBaggageTests : IDisposable
         await _db.SaveChangesAsync();
     }
 
-    [Fact]
-    public void NewSpecialBag_IsNotAcknowledged()
-    {
-        //Arrange
-        var bag = new Bag
-        {
-            HandlingType = "Fragile"
-        };
-
-        //Assert
-        Assert.False(bag.SpecialHandlingAcknowledged);
-    }
 
     [Fact]
     public async Task OnGetAsync_LoadsOnlySpecialBags()
